@@ -29,6 +29,7 @@ class NewVisitorTest(unittest.TestCase):
         # списком неотложных дел. Она решает оценить его
         # домашнюю страницу
         self.browser.get('http://localhost:8000')
+        time.sleep(1)
 
         # Она видит, что заголовок и шапка страницы говорят о
         # списках неотложных дел
@@ -62,9 +63,9 @@ class NewVisitorTest(unittest.TestCase):
         # (Эдит очень методична)
         inputbox = self.browser.find_element(By.ID, "id_new_item")
         inputbox.send_keys("Сделать мушку из павлиньих перьев")
-        time.sleep(3)
+        time.sleep(1)
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(3)
+        time.sleep(1)
 
         
         # Страница снова обновляется, и теперь показывает оба элемента ее списка
