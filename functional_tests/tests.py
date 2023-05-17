@@ -3,9 +3,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import pretty_errors
 import unittest
+from django.test import LiveServerTestCase
 import time
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """тест нового посетителя"""
     
     def setUp(self) -> None:
@@ -28,7 +29,7 @@ class NewVisitorTest(unittest.TestCase):
         # Эдит слышала про крутое новое онлайн-приложение со
         # списком неотложных дел. Она решает оценить его
         # домашнюю страницу
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         time.sleep(1)
 
         # Она видит, что заголовок и шапка страницы говорят о
