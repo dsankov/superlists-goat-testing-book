@@ -6,8 +6,11 @@ import pretty_errors
 import unittest
 from django.test import LiveServerTestCase
 import time
+from log2d import Log
 
-MAX_WAIT = 10
+MAX_WAIT = 3
+logger = Log("functional_test\t").logger
+
 class NewVisitorTest(LiveServerTestCase):
     """тест нового посетителя"""
     
@@ -26,10 +29,13 @@ class NewVisitorTest(LiveServerTestCase):
             try:
                 table = self.browser.find_element(By.ID, "id_list_table")
                 rows = table.find_elements(By.TAG_NAME, "tr")
-                self.assertIn(row_text, [row.text for row in rows])
+                rows_text = [row.text for row in rows]
+                logger.debug(f"looking for {row_text} in {rows_text}")
+                self.assertIn(row_text, rows_text)
                 return
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
+                    logger.critical(f"not found {row_text} in {[row.text for row in rows]}")                    
                     raise e
                 time.sleep(0.5)
         
@@ -73,13 +79,14 @@ class NewVisitorTest(LiveServerTestCase):
         # (Эдит очень методична)
         inputbox = self.browser.find_element(By.ID, "id_new_item")
         inputbox.send_keys("Сделать мушку из павлиньих перьев")
-        # time.sleep(1)
+        # time.sleep(3)
         inputbox.send_keys(Keys.ENTER)
-        # time.sleep(1)
+        # time.sleep(3)
 
         
         # Страница снова обновляется, и теперь показывает оба элемента ее списка
         self.wait_for_row_in_list_table("1: Купить павлиньи перья")
+        # time.sleep(3)
         self.wait_for_row_in_list_table("2: Сделать мушку из павлиньих перьев")
                 
         # Эдит интересно, запомнит ли сайт ее список. Далее она видит, что
@@ -112,6 +119,7 @@ class NewVisitorTest(LiveServerTestCase):
         # Фрэнсис посещает домашнюю страницу. Нет никаких признаков списка Эдит
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element(By.TAG_NAME, "body").text
+        
         self.assertNotIn("Купить павлиньи перья", page_text)
         self.assertNotIn("Сделать мушку", page_text)
         

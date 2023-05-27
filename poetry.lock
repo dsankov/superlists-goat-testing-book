@@ -160,6 +160,17 @@ files = [
 ]
 
 [[package]]
+name = "log2d"
+version = "0.0.18"
+description = "Simple, sane, and sensible Logging"
+category = "dev"
+optional = false
+python-versions = "*"
+files = [
+    {file = "log2d-0.0.18.tar.gz", hash = "sha256:e5ed3e2b5632ab6eeb0ec5ebf6c134f53e47e7834331154a20d898752ea1dc94"},
+]
+
+[[package]]
 name = "outcome"
 version = "1.2.0"
 description = "Capture the outcome of Python function calls."
@@ -318,4 +329,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "8f8e85d075be19c870ebaa6f1318a742b78d2c05ad4a28c81cac36b971283968"
+content-hash = "ebf9f12143ac63ade88da77aedd56f6b5b5c7f8ddf8fee83ccd768f961c5a26a"
