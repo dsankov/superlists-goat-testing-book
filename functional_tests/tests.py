@@ -5,13 +5,14 @@ from selenium.common.exceptions import WebDriverException
 import pretty_errors
 import unittest
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 from log2d import Log
 
 MAX_WAIT = 3
 logger = Log("functional_test\t").logger
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     """тест нового посетителя"""
     
     def setUp(self) -> None:
@@ -149,6 +150,7 @@ class NewVisitorTest(LiveServerTestCase):
         
         # Она замечает поле ввода по центру
         inputbox = self.browser.find_element(By.ID, "id_new_item")
+        # time.sleep(5)
         self.assertAlmostEqual(
             inputbox.location["x"] + inputbox.size["width"] / 2,
             512,
