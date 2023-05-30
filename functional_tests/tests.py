@@ -7,6 +7,7 @@ import unittest
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
+import os
 from log2d import Log
 
 MAX_WAIT = 3
@@ -18,6 +19,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self) -> None:
         # return super().setUp()
         self.browser = webdriver.Firefox()
+        staging_server = os.environ.get("STAGING_SERVER")
+        if staging_server:
+            self.live_server_url = "http://" + staging_server
         
     def tearDown(self) -> None:
         # return super().tearDown()
