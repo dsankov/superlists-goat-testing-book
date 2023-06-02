@@ -8,10 +8,10 @@ from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 import os
-from log2d import Log
+# from log2d import Log
 
 MAX_WAIT = 3
-logger = Log("functional_test\t").logger
+# logger = Log("functional_test\t").logger
 
 class NewVisitorTest(StaticLiveServerTestCase):
     """тест нового посетителя"""
@@ -35,12 +35,12 @@ class NewVisitorTest(StaticLiveServerTestCase):
                 table = self.browser.find_element(By.ID, "id_list_table")
                 rows = table.find_elements(By.TAG_NAME, "tr")
                 rows_text = [row.text for row in rows]
-                logger.debug(f"looking for {row_text} in {rows_text}")
+                # logger.debug(f"looking for {row_text} in {rows_text}")
                 self.assertIn(row_text, rows_text)
                 return
             except (AssertionError, WebDriverException) as e:
                 if time.time() - start_time > MAX_WAIT:
-                    logger.critical(f"not found {row_text} in {[row.text for row in rows]}")                    
+                    # logger.critical(f"not found {row_text} in {[row.text for row in rows]}")                    
                     raise e
                 time.sleep(0.5)
         
