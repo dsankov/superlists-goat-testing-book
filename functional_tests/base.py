@@ -41,3 +41,14 @@ class FunctionalTest(StaticLiveServerTestCase):
                     # logger.critical(f"not found {row_text} in {[row.text for row in rows]}")                    
                     raise e
                 time.sleep(0.5)
+    def wait_for(self, fn):
+        """ожидание устовия"""
+        start_time = time.time()
+        while True:
+            try:
+                return fn()
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    # logger.critical(f"not found {row_text} in {[row.text for row in rows]}")                    
+                    raise e
+                time.sleep(0.5)
