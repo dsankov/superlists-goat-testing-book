@@ -7,7 +7,7 @@ User=sirrotten
 WorkingDirectory=/home/sirrotten/sites/SITENAME/source
 ExecStart=/home/sirrotten/sites/SITENAME/virtualenv/bin/gunicorn \
     --bind unix:/tmp/SITENAME.socket \
-    suerlists.wsgi:application
+    superlists.wsgi:application
 
 [Install]
 WantedBy=multi-user.target
