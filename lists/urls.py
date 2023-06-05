@@ -25,6 +25,4 @@ urlpatterns = [
         name="new_list"
         ),
     re_path(r"^(\d+)/$", view=views.view_list, name="view_list"),
-    re_path(r"^(\d+)/add_item$", view=views.add_item, name="add_item"),
-    # path("admin/", admin.site.urls),
 ]

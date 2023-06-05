@@ -48,6 +48,36 @@ class ListViewTest(TestCase):
        response = self.client.get(f"/lists/{correct_list.id}/")
        self.assertEqual(response.context["list"], correct_list)
         
+    def test_can_save_a_POST_request_to_an_existing_list(self):
+        """тест: можно сохранить post-запрос в существующий список"""
+        other_list = List.objects.create()
+        correct_list = List.objects.create()
+        
+        self.client.post(
+            path=f"/lists/{correct_list.id}/",
+            data={
+                "item_text": "A new item for an existing list"
+            },
+        )
+        
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, "A new item for an existing list")
+        self.assertEqual(new_item.list, correct_list)
+        
+    def test_POST_redirects_lo_list_view(self):
+        """тест: переадрессует в представление списка"""
+        other_list = List.objects.create()
+        correct_list = List.objects.create()
+        
+        response = self.client.post(
+            path=f"/lists/{correct_list.id}/",
+            data={
+                "item_text": "A new item for an existing list"
+            },
+        )
+        
+        self.assertRedirects(response, f"/lists/{correct_list.id}/")
         
 class NewListTest(TestCase):
     """тест нового списка"""
@@ -70,39 +100,24 @@ class NewListTest(TestCase):
             )
         new_list = List.objects.first()
         self.assertRedirects(response, f"/lists/{new_list.id}/")
-        # self.assertEqual(response.status_code, 302)
-        # self.assertEqual(response["location"], "/lists/the-only-list-in-the-world/")
-    
+   
+    def test_validation_errors_are_sent_back_to_home_page_template(self):
+        """тест: ошибки валидации отсылаются обра тно в шаблон"""
+        
+        response = self.client.post("/lists/new", data={"item_text": ""})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "home.html")
+        expected_error = "You cant have an empty list item"
+        self.assertContains(response, expected_error)
+        
+    def test_inavalid_list_items_arent_saved(self):
+        """тест: недопустимые элементы списка не сохраняются"""
+        self.client.post("/lists/new", data={"item_text": ""})
+        self.assertEqual(List.objects.count(), 0)
+        self.assertEqual(Item.objects.count(), 0)
+        
+        
 class NewItemTest(TestCase):
     """Тест нового списка"""
     
-    def test_can_save_a_POST_request_to_an_existing_list(self):
-        """тест: можно сохранить post-запрос в существующий срисок"""
-        other_list = List.objects.create()
-        correct_list = List.objects.create()
-        
-        self.client.post(
-            path=f"/lists/{correct_list.id}/add_item",
-            data={
-                "item_text": "A new item for an existing list"
-            },
-        )
-        
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, "A new item for an existing list")
-        self.assertEqual(new_item.list, correct_list)
-        
-    def test_redirects_lo_list_view(self):
-        """тест: переадрессует в представление списка"""
-        other_list = List.objects.create()
-        correct_list = List.objects.create()
-        
-        response = self.client.post(
-            path=f"/lists/{correct_list.id}/add_item",
-            data={
-                "item_text": "A new item for an existing list"
-            },
-        )
-        
-        self.assertRedirects(response, f"/lists/{correct_list.id}/")
+    pass
