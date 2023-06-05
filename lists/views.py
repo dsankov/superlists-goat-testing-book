@@ -26,7 +26,7 @@ def view_list(request: HttpRequest, list_id) -> HttpResponse:
             item.full_clean()
             # print("!!!!!!!!!!!")
             item.save()
-            return redirect(f"/lists/{list_.id}/")
+            return redirect(list_)
         except ValidationError:
             item.delete()
             error = "You cant have an empty list item"
@@ -56,5 +56,5 @@ def new_list(request: HttpRequest) -> HttpResponse:
         return render(request=request, template_name="home.html", 
                       context={"error": error}        
                     )
-    return redirect(f"/lists/{list_.id}/")
+    return redirect(list_)
     
