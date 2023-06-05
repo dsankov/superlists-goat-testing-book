@@ -16,14 +16,29 @@ def view_list(request: HttpRequest, list_id) -> HttpResponse:
 
     # logger.debug(f"view list: {list_id=}")
     list_ = List.objects.get(id=list_id)
+    error = None
     if request.method == "POST":
-        Item.objects.create(
-            text=request.POST["item_text"],
-            list=list_
+        try:
+            item = Item.objects.create(
+                text=request.POST["item_text"],
+                list=list_
+            )
+            item.full_clean()
+            # print("!!!!!!!!!!!")
+            item.save()
+            return redirect(f"/lists/{list_.id}/")
+        except ValidationError:
+            item.delete()
+            error = "You cant have an empty list item"
+            
+    return render(
+        request=request, 
+        template_name="list.html", 
+        context={
+            "list": list_,
+            "error": error,
+            }
         )
-        return redirect(f"/lists/{list_.id}/")
-    
-    return render(request, "list.html", {"list": list_})
 
 def new_list(request: HttpRequest) -> HttpResponse:
     """новый список"""
